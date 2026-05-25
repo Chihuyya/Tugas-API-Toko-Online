@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Login Admin - MODERNSHOP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+</head>
+<body class="bg-slate-100 font-['Inter'] flex items-center justify-center h-screen">
+
+    <div class="bg-white p-8 rounded-2xl shadow-md w-full max-w-md border border-slate-200">
+        <div class="text-center mb-6">
+            <h1 class="text-2xl font-bold text-slate-800">MODERN<span class="text-blue-600">SHOP</span></h1>
+            <p class="text-sm text-slate-500 mt-1">Silakan masuk ke panel admin</p>
+        </div>
+
+        <form id="login-form" class="space-y-4">
+            <div>
+                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Username</label>
+                <input type="text" id="username" required class="w-full rounded-xl border-slate-300 text-sm p-3 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-slate-600 uppercase mb-1">Password</label>
+                <input type="password" id="password" required class="w-full rounded-xl border-slate-300 text-sm p-3 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <button type="submit" id="btn-login" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold p-3 rounded-xl text-sm transition-colors">
+                Masuk Sistem
+            </button>
+        </form>
+    </div>
+
+    <script>
+        const API_URL = "http://localhost/db_toko_online/index.php";
+
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const btn = document.getElementById('btn-login');
+
+            btn.innerText = "Memverifikasi...";
+            btn.disabled = true;
+
+            fetch(`${API_URL}?resource=login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username: user, password: pass })
+            })
+            .then(res => {
+                if(!res.ok) throw new Error("Akun salah atau tidak terdaftar!");
+                return res.json();
+            })
+            .then(response => {
+                if (response.status === "success") {
+                    // SIMPAN TOKEN DENGAN NAMA VARIABEL YANG COMPATIBLE SAMA DASHBOARD
+                    localStorage.setItem('session_admin_toko', response.token);
+                    alert("Login sukses! Mengalihkan ke dashboard...");
+                    window.location.href = "admin_dashboard_modern_shop.html";
+                }
+            })
+            .catch(err => {
+                alert(err.message);
+                btn.innerText = "Masuk Sistem";
+                btn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>

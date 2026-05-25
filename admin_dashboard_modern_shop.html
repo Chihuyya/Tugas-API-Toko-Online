@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Admin Dashboard Modern - MODERNSHOP PRO</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#0058be",
+                        "on-primary": "#ffffff",
+                        "primary-container": "#2170e4",
+                        "on-primary-container": "#fefcff",
+                        "surface": "#f9f9ff",
+                        "surface-container": "#ecedf7",
+                        "surface-container-low": "#f2f3fd",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-high": "#e6e7f2",
+                        "surface-container-highest": "#e1e2ec",
+                        "on-surface": "#191b23",
+                        "on-surface-variant": "#424754",
+                        "outline": "#727785",
+                        "outline-variant": "#c2c6d6"
+                    }
+                }
+            }
+        };
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-['Inter'] antialiased">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <aside class="w-64 bg-slate-900 text-white flex flex-col z-20 shrink-0 border-r border-slate-800">
+            <div class="p-6 flex items-center gap-3 border-b border-slate-800">
+                <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+                    <span class="material-symbols-outlined text-2xl">shopping_cart</span>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-none tracking-tight text-white">MODERN<span class="text-blue-500">SHOP</span></h1>
+                    <span class="text-[11px] text-slate-500 font-medium tracking-wider uppercase mt-1 block">Panel Admin</span>
+                </div>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 space-y-1.5">
+                <button onclick="switchTab('dashboard')" id="btn-tab-dashboard" class="flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-blue-600 text-white font-semibold text-sm transition-all duration-200">
+                    <span class="material-symbols-outlined text-[22px]">dashboard</span>
+                    <span>Dashboard Ringkasan</span>
+                </button>
+                <button onclick="switchTab('produk')" id="btn-tab-produk" class="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/60 hover:text-white font-medium text-sm transition-all duration-200">
+                    <span class="material-symbols-outlined text-[22px]">inventory_2</span>
+                    <span>Manajemen Produk</span>
+                </button>
+            </div>
+
+            <div class="p-4 border-t border-slate-800 bg-slate-950/40">
+                <button onclick="handleLogout()" class="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-red-400 hover:bg-red-500/10 hover:text-red-300 font-medium text-sm transition-all duration-200">
+                    <span class="material-symbols-outlined text-[22px]">logout</span>
+                    <span>Keluar Sistem</span>
+                </button>
+            </div>
+        </aside>
+
+        <div class="flex-1 flex flex-col min-w-0 bg-surface">
+            
+            <header class="h-16 border-b border-outline-variant bg-surface-container-lowest px-8 flex items-center justify-between shrink-0">
+                <div class="flex items-center gap-2">
+                    <span class="text-sm font-semibold text-on-surface-variant">Sistem Manajemen Toko</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm border border-blue-200">A</div>
+                    <span class="text-sm font-semibold text-on-surface">Administrator PRO</span>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto p-8 space-y-8">
+                
+                <section id="tab-dashboard" class="block space-y-6">
+                    <div>
+                        <h2 class="text-2xl font-bold text-on-surface tracking-tight">Ringkasan Toko Anda</h2>
+                        <p class="text-sm text-on-surface-variant mt-1">Berikut adalah metrik performa toko online untuk bulan ini.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm flex items-center gap-5">
+                            <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center border border-emerald-100">
+                                <span class="material-symbols-outlined text-3xl">payments</span>
+                            </div>
+                            <div>
+                                <span class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider block">Total Pendapatan</span>
+                                <h3 id="stat-pendapatan" class="text-2xl font-bold text-on-surface mt-1">Rp 0</h3>
+                            </div>
+                        </div>
+
+                        <div class="bg-surface-container-lowest p-6 rounded-2xl border border-outline-variant shadow-sm flex items-center gap-5">
+                            <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center border border-blue-100">
+                                <span class="material-symbols-outlined text-3xl">receipt_long</span>
+                            </div>
+                            <div>
+                                <span class="text-xs font-semibold text-on-surface-variant uppercase tracking-wider block">Pesanan Selesai</span>
+                                <h3 id="stat-transaksi" class="text-2xl font-bold text-on-surface mt-1">0 Transaksi</h3>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="tab-produk" class="hidden space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-on-surface tracking-tight">Katalog Produk Modern PRO</h2>
+                            <p class="text-sm text-on-surface-variant mt-1">Daftar semua koleksi produk toko Anda yang terdaftar di database MySQL dengan gambar asli.</p>
+                        </div>
+                        <button onclick="openAddModal()" class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-semibold text-sm shadow-md shadow-blue-600/10 transition-all">
+                            <span class="material-symbols-outlined text-[18px]">add</span>
+                            <span>Tambah Produk Baru</span>
+                        </button>
+                    </div>
+
+                    <div id="product-grid-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="product-modal" class="hidden fixed inset-0 bg-slate-950/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div class="bg-surface-container-lowest rounded-2xl w-full max-w-md shadow-xl border border-outline-variant p-6 space-y-5">
+            <div class="flex justify-between items-center border-b border-outline-variant pb-3">
+                <h3 id="modal-title" class="text-lg font-bold text-on-surface">Formulir Data Produk</h3>
+                <button onclick="closeModal()" class="text-on-surface-variant hover:text-on-surface p-1 rounded-lg hover:bg-surface-container transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">close</span>
+                </button>
+            </div>
+            
+            <form id="product-form" onsubmit="saveProduct(event)" class="space-y-4">
+                <input type="hidden" id="form-id-produk">
+                <div>
+                    <label class="block text-xs font-bold text-on-surface-variant mb-1.5 tracking-wider uppercase">Nama Barang</label>
+                    <input type="text" id="form-nama" required class="w-full rounded-xl border-outline-variant bg-surface focus:border-blue-500 focus:ring-blue-500/20 text-sm p-3">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-on-surface-variant mb-1.5 tracking-wider uppercase">ID Kategori (Gunakan Angka 1-5)</label>
+                    <input type="number" id="form-kategori" required class="w-full rounded-xl border-outline-variant bg-surface focus:border-blue-500 focus:ring-blue-500/20 text-sm p-3">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-on-surface-variant mb-1.5 tracking-wider uppercase">Custom Link URL Gambar (Opsional)</label>
+                    <input type="url" id="form-url-gambar" placeholder="Kosongkan jika ingin auto-gambar dari sistem" class="w-full rounded-xl border-outline-variant bg-surface focus:border-blue-500 focus:ring-blue-500/20 text-sm p-3">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-on-surface-variant mb-1.5 tracking-wider uppercase">Harga Jual (Rp)</label>
+                        <input type="number" id="form-harga" required class="w-full rounded-xl border-outline-variant bg-surface focus:border-blue-500 focus:ring-blue-500/20 text-sm p-3">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-on-surface-variant mb-1.5 tracking-wider uppercase">Stok Gudang</label>
+                        <input type="number" id="form-stok" required class="w-full rounded-xl border-outline-variant bg-surface focus:border-blue-500 focus:ring-blue-500/20 text-sm p-3">
+                    </div>
+                </div>
+                <div class="pt-2">
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold p-3.5 rounded-xl shadow-md transition-colors text-sm">
+                        Simpan Perubahan ke Database
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "http://localhost/db_toko_online/index.php";
+
+        // FIX SINKRONISASI TOKEN SESUAI FILE LOGIN UTMANA LU
+        function getAuthToken() {
+            return localStorage.getItem('session_admin_toko') || '';
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const token = getAuthToken();
+            if (!token) {
+                alert("Akses Terlarang! Sesi Lu kosong, login dulu bray!");
+                window.location.href = "login_admin_modern_shop.html"; 
+                return;
+            }
+            loadDashboardStats();
+        });
+
+        function switchTab(tabName) {
+            const tabDashboard = document.getElementById('tab-dashboard');
+            const tabProduk = document.getElementById('tab-produk');
+            const btnDashboard = document.getElementById('btn-tab-dashboard');
+            const btnProduk = document.getElementById('btn-tab-produk');
+
+            if (tabName === 'dashboard') {
+                tabDashboard.classList.remove('hidden');
+                tabDashboard.classList.add('block');
+                tabProduk.classList.remove('block');
+                tabProduk.classList.add('hidden');
+                
+                btnDashboard.className = "flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-blue-600 text-white font-semibold text-sm transition-all duration-200";
+                btnProduk.className = "flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/60 hover:text-white font-medium text-sm transition-all duration-200";
+                loadDashboardStats();
+            } else if (tabName === 'produk') {
+                tabProduk.classList.remove('hidden');
+                tabProduk.classList.add('block');
+                tabDashboard.classList.remove('block');
+                tabDashboard.classList.add('hidden');
+
+                btnProduk.className = "flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-blue-600 text-white font-semibold text-sm transition-all duration-200";
+                btnDashboard.className = "flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-400 hover:bg-slate-800/60 hover:text-white font-medium text-sm transition-all duration-200";
+                loadProductsGrid();
+            }
+        }
+
+        function loadDashboardStats() {
+            const date = new Date();
+            const bulan = String(date.getMonth() + 1).padStart(2, '0');
+            const tahun = date.getFullYear();
+
+            fetch(`${API_URL}?resource=stats&bulan=${bulan}&tahun=${tahun}`, {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${getAuthToken()}` }
+            })
+            .then(res => res.json())
+            .then(response => {
+                if(response.status === "success") {
+                    document.getElementById('stat-transaksi').innerText = `${response.data.jumlah_transaksi} Transaksi`;
+                    const totalPendapatan = response.data.total_pendapatan || 0;
+                    const pendapatanFormatted = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(totalPendapatan);
+                    document.getElementById('stat-pendapatan').innerText = pendapatanFormatted;
+                }
+            })
+            .catch(err => console.error("Gagal menyinkronkan data statistik: ", err));
+        }
+
+        // ENGINE AUTO-MATCHING GAMBAR SESUAI LINK PINTEREST LU
+        function getSmartImage(namaProduk) {
+            if (!namaProduk) return 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=400&fit=crop&q=60';
+            
+            const nama = namaProduk.toLowerCase().trim();
+            
+            if (nama.includes('lego')) {
+                return 'https://i.pinimg.com/736x/bc/67/11/bc6711d6fb6973fd4d9a255ab3d932b2.jpg';
+            } else if (nama.includes('novel') || nama.includes('buku')) {
+                return 'https://i.pinimg.com/736x/72/14/9d/72149d1fb83e6946db7d9130b97b1f46.jpg';
+            } else if (nama.includes('kopi')) {
+                return 'https://i.pinimg.com/736x/9a/19/e2/9a19e27144d1f594e69eaf116baf4513.jpg';
+            } else if (nama.includes('keripik') || nama.includes('kentang')) {
+                return 'https://i.pinimg.com/1200x/32/ae/f5/32aef5a4ca9fe9a9d1236c379df1c8f7.jpg';
+            } else if (nama.includes('dress') || nama.includes('bunga')) {
+                return 'https://i.pinimg.com/736x/a4/63/6f/a4636f1c59e7d69c813ffe59491912cb.jpg';
+            } else if (nama.includes('hoodie') || nama.includes('jaket')) {
+                return 'https://i.pinimg.com/736x/e3/c0/38/e3c038cd126db056f21cfc86b4c5a2d5.jpg';
+            } else if (nama.includes('futsal')) {
+                return 'https://i.pinimg.com/736x/75/cc/bc/75ccbc57a7bf7cc8f5b869dd9964b875.jpg';
+            } else if (nama.includes('compass')) {
+                return 'https://i.pinimg.com/736x/93/2f/8b/932f8b506a10fc9352cb73b4484431cf.jpg';
+            } else if (nama.includes('flanel') || nama.includes('kemeja')) {
+                return 'https://i.pinimg.com/736x/b6/c5/04/b6c504a7fcac18bbcc8ed85febbd3f8d.jpg';
+            } else if (nama.includes('samsung') || nama.includes('smartphone')) {
+                return 'https://i.pinimg.com/736x/0e/c2/e5/0ec2e5baa1f277c474343b7b4120989b.jpg';
+            }
+            
+            return 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?w=400&fit=crop&q=60';
+        }
+
+        // LOAD DATA DAN LOOPING KE GRID
+        function loadProductsGrid() {
+            const gridContainer = document.getElementById('product-grid-container');
+            gridContainer.innerHTML = `<div class="col-span-full p-8 text-center text-on-surface-variant font-medium">Sedang memproses seluruh isi toko database...</div>`;
+
+            fetch(`${API_URL}?resource=produk`, {
+                method: "GET",
+                headers: { "Authorization": `Bearer ${getAuthToken()}` }
+            })
+            .then(res => res.json())
+            .then(response => {
+                if(response.status === "success") {
+                    gridContainer.innerHTML = "";
+                    if(response.data.length === 0) {
+                        gridContainer.innerHTML = `<div class="col-span-full p-8 text-center text-on-surface-variant">Belum ada barang di database bray.</div>`;
+                        return;
+                    }
+
+                    response.data.forEach(prod => {
+                        const hargaFmt = new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(prod.harga);
+                        let imgFinal = getSmartImage(prod.nama_produk);
+                        
+                        if (prod.url_gambar && prod.url_gambar.trim() !== "") {
+                            imgFinal = prod.url_gambar;
+                        }
+
+                        const cardHtml = `
+                            <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-all duration-200">
+                                <div class="w-full h-48 bg-slate-100 relative overflow-hidden shrink-0 border-b border-outline-variant">
+                                    <img src="${imgFinal}" alt="${prod.nama_produk}" class="w-full h-full object-cover" onerror="this.onerror=null;this.src='https://placehold.co/400x300?text=Gambar+Pinterest';">
+                                    <span class="absolute top-3 left-3 px-2.5 py-1 bg-slate-900/80 text-white rounded-md text-[11px] font-bold tracking-wider">ID #${prod.id_produk}</span>
+                                </div>
+                                <div class="p-5 flex flex-col flex-1 space-y-3">
+                                    <div class="flex-1">
+                                        <span class="px-2 py-0.5 bg-surface-container text-on-surface-variant rounded text-[10px] font-bold border border-outline-variant uppercase tracking-wider">Kategori ${prod.id_kategori}</span>
+                                        <h4 class="font-bold text-on-surface text-base mt-2 line-clamp-2 leading-tight">${prod.nama_produk}</h4>
+                                    </div>
+                                    <div class="flex items-baseline justify-between border-t border-outline-variant/60 pt-3">
+                                        <span class="text-lg font-extrabold text-blue-600">${hargaFmt}</span>
+                                        <span class="text-xs font-semibold ${prod.stok > 0 ? 'text-on-surface-variant' : 'text-red-600 font-bold'}">
+                                            Stok: ${prod.stok} unit
+                                        </span>
+                                    </div>
+                                    <div class="flex gap-2 pt-1 border-t border-outline-variant/40">
+                                        <button onclick='openEditModal(${JSON.stringify(prod)})' class="flex-1 flex items-center justify-center gap-1.5 py-2 border border-blue-200 hover:bg-blue-50 text-blue-600 rounded-xl text-xs font-bold transition-colors">
+                                            <span class="material-symbols-outlined text-[16px]">edit</span> Edit
+                                        </button>
+                                        <button onclick="deleteProduct(${prod.id_produk})" class="p-2 border border-red-200 hover:bg-red-50 text-red-600 rounded-xl transition-colors">
+                                            <span class="material-symbols-outlined text-[16px]">delete</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        gridContainer.innerHTML += cardHtml;
+                    });
+                }
+            })
+            .catch(err => alert("Gagal memuat katalog: " + err));
+        }
+
+        function openAddModal() {
+            document.getElementById('modal-title').innerText = "Tambah Produk Baru";
+            document.getElementById('product-form').reset();
+            document.getElementById('form-id-produk').value = "";
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
+        function openEditModal(product) {
+            document.getElementById('modal-title').innerText = "Ubah Detail Barang";
+            document.getElementById('form-id-produk').value = product.id_produk;
+            document.getElementById('form-nama').value = product.nama_produk;
+            document.getElementById('form-kategori').value = product.id_kategori;
+            document.getElementById('form-url-gambar').value = product.url_gambar || '';
+            document.getElementById('form-harga').value = product.harga;
+            document.getElementById('form-stok').value = product.stok;
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('product-modal').classList.add('hidden');
+        }
+
+        function saveProduct(event) {
+            event.preventDefault();
+            const idProduk = document.getElementById('form-id-produk').value;
+            const nama = document.getElementById('form-nama').value;
+            const kategori = parseInt(document.getElementById('form-kategori').value);
+            const urlGambar = document.getElementById('form-url-gambar').value;
+            const harga = parseFloat(document.getElementById('form-harga').value);
+            const stok = parseInt(document.getElementById('form-stok').value);
+
+            const payload = { id_kategori: kategori, nama_produk: nama, harga: harga, stok: stok, url_gambar: urlGambar };
+            const isEdit = idProduk !== "";
+            const endpointUrl = isEdit ? `${API_URL}?resource=produk&id=${idProduk}` : `${API_URL}?resource=produk`;
+            const httpMethod = isEdit ? "PUT" : "POST";
+
+            fetch(endpointUrl, {
+                method: httpMethod,
+                headers: { "Content-Type": "application/json", "Authorization": `Bearer ${getAuthToken()}` },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(response => {
+                if (response.status === "success") {
+                    alert("Berhasil disimpan!");
+                    closeModal();
+                    loadProductsGrid();
+                } else {
+                    alert("Gagal: " + response.message);
+                }
+            })
+            .catch(err => alert("Koneksi Error: " + err));
+        }
+
+        function deleteProduct(id) {
+            if(confirm("Hapus produk ini secara permanen?")) {
+                fetch(`${API_URL}?resource=produk&id=${id}`, {
+                    method: "DELETE",
+                    headers: { "Authorization": `Bearer ${getAuthToken()}` }
+                })
+                .then(res => res.json())
+                .then(response => {
+                    if (response.status === "success") {
+                        loadProductsGrid();
+                    }
+                })
+                .catch(err => alert("Error: " + err));
+            }
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('session_admin_toko');
+            alert('Berhasil keluar sistem.');
+            window.location.href = "login_admin_modern_shop.html";
+        }
+    </script>
+</body>
+</html>
